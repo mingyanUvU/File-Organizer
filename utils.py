@@ -45,34 +45,28 @@ EXCLUDED_EXTS = {".tmp", ".temp", ".crdownload", ".download", ".part"}
 
 
 def get_latest_file(folder: str) -> str | None:
-    """递归扫描所有子目录，返回最新文件（不含系统/临时文件）"""
+    """只扫当前目录；文件夹用 mtime（文件变化时更新），文件用 ctime"""
     if not os.path.isdir(folder):
         print(f"{t('错误：目录不存在 — ')}{folder}")
         return None
 
-    latest = None
-    latest_time = 0
+    entries = []
+    for item in os.listdir(folder):
+        full = os.path.join(folder, item)
+        if item.lower() in EXCLUDED_FILES or item.startswith("~$"):
+            continue
+        if os.path.isfile(full) and os.path.splitext(item)[1].lower() in EXCLUDED_EXTS:
+            continue
+        entries.append(full)
 
-    for root, dirs, files in os.walk(folder):
-        # 跳过系统/临时目录
-        dirs[:] = [d for d in dirs if d.lower() not in EXCLUDED_FILES and not d.startswith("~$")]
-        for f in files:
-            if f.lower() in EXCLUDED_FILES:
-                continue
-            if f.startswith("~$"):
-                continue
-            if os.path.splitext(f)[1].lower() in EXCLUDED_EXTS:
-                continue
-            full = os.path.join(root, f)
-            ctime = os.path.getctime(full)
-            if ctime > latest_time:
-                latest_time = ctime
-                latest = full
-
-    if latest is None:
+    if not entries:
         print(t("目录为空，没有可处理的文件。"))
         return None
-    return latest
+
+    def _time(p):
+        return os.path.getmtime(p) if os.path.isdir(p) else os.path.getctime(p)
+
+    return max(entries, key=_time)
 def format_size(size_bytes: int) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if size_bytes < 1024:
