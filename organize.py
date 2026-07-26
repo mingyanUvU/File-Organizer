@@ -24,46 +24,68 @@ def organize_file(file_path: str, cfg: dict):
     show_file_info(file_path)
     print("=" * 48)
 
-    if input_yes_no(f"{t('是否打开文件所在文件夹？')}(y/n): "):
-        open_folder(os.path.dirname(file_path))
+    print("=" * 48)
 
     ext = os.path.splitext(file_path)[1].lower()
     ext_mappings = cfg["extensions"].get(ext, [])
 
-    target = None
+    while True:
+        # Combined menu
+        print(f"\n" + t("操作选项："))
+        print("  [1] " + t("打开所在文件夹"))
+        idx = 2
+        for g, c in ext_mappings:
+            label = f"  [{idx}] {g} \u2192 {c}"
+            if idx == 2 and len(ext_mappings) == 1:
+                label = f"  [{idx}] " + t("使用默认分类") + f" \u2192 {g} \u2192 {c}"
+            print(label)
+            idx += 1
+        pi = idx
+        print(f"  [{pi}] " + t("直接输入路径"))
+        idx += 1
+        print(f"  [{idx}] " + t("选择其他分类"))
+        idx += 1
+        print("  [0] " + t("取消"))
 
-    if len(ext_mappings) == 0:
-        print(f"{t('未识别的后缀')}{ext}，{t('请从所有分类中选择')}")
+        valid = {"0", "1", str(pi), str(idx-1)}
+        if ext_mappings:
+            valid |= {str(i) for i in range(2, 2 + len(ext_mappings))}
+        choice = input_option(t("输入编号: "), valid)
+
+        if choice == "0":
+            return
+        if choice == "1":
+            open_folder(os.path.dirname(file_path))
+            continue
+        if choice == str(pi):
+            p = input(t("请输入目标路径: ")).strip()
+            if not p:
+                continue
+            if not os.path.isabs(p):
+                print(t("请输入绝对路径。"))
+                continue
+            sub = datetime.now().strftime("%Y-%m-%d_%H-%M")
+            target_dir = os.path.join(p, sub)
+            try:
+                os.makedirs(target_dir, exist_ok=True)
+                dst = os.path.join(target_dir, os.path.basename(file_path))
+                if os.path.exists(dst):
+                    os.remove(dst)
+                shutil.move(file_path, target_dir)
+                print(t("已移动到：") + target_dir)
+            except Exception as e:
+                print(t("移动失败：") + str(e))
+                return
+            if input_yes_no(t("是否打开目标文件夹？") + "(y/n): "):
+                open_folder(target_dir)
+            return
+        if choice in {str(i) for i in range(2, 2 + len(ext_mappings))}:
+            target = ext_mappings[int(choice) - 2]
+            break
         target = select_classification(cfg, t("请从所有分类中选择"))
         if target is None:
-            return
-
-    elif len(ext_mappings) == 1:
-        g, c = ext_mappings[0]
-        cat_path = cfg["groups"].get(g, {}).get(c, "")
-        label = f"{g} {t('→')} {c}"
-        print(f"{t('建议分类：')}{label}  ({cat_path})")
-        if input_yes_no(f"{t('是否使用此分类？')}(y/n): "):
-            target = (g, c)
-        else:
-            target = select_classification(cfg, t("请重新选择分类"))
-            if target is None:
-                return
-
-    else:
-        print(f"{ext}{t('有')}{len(ext_mappings)}{t('个指向')}")
-        for i, (g, c) in enumerate(ext_mappings, 1):
-            cat_path = cfg["groups"].get(g, {}).get(c, "")
-            print(f"  [{i}] {g} {t('→')} {c}  ({cat_path})")
-        print(t("  [0] 从所有分类中选择"))
-        m_valid = {str(i) for i in range(1, len(ext_mappings) + 1)} | {"0"}
-        m_choice = input_option(t("输入编号: "), m_valid)
-        if m_choice == "0":
-            target = select_classification(cfg, t("从所有分类中选择"))
-            if target is None:
-                return
-        else:
-            target = ext_mappings[int(m_choice) - 1]
+            continue
+        break
 
     group_name, cat_name = target
     cat_path = cfg["groups"].get(group_name, {}).get(cat_name, "")
@@ -82,7 +104,7 @@ def organize_file(file_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    default_name = sanitize_folder_name(os.path.splitext(os.path.basename(file_path))[0])
+    default_name = datetime.now().strftime("%Y-%m-%d_%H-%M")
     folder_input = input(f"{t('文件夹名（直接回车默认：')}{default_name}{t('）: ')}").strip()
     folder_name = sanitize_folder_name(folder_input) if folder_input else default_name
     if not folder_name:
@@ -156,7 +178,7 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    default_name = sanitize_folder_name(os.path.basename(folder_path))
+    default_name = datetime.now().strftime("%Y-%m-%d_%H-%M")
     folder_input = input(f"{t('文件夹名（直接回车默认：')}{default_name}{t('）: ')}").strip()
     folder_name = sanitize_folder_name(folder_input) if folder_input else default_name
 
