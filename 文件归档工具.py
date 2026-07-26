@@ -10,10 +10,12 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
 CONFIG_PATH = os.path.join(BASE_DIR, "分类配置.json")
-DOWNLOAD_DIR = R"D:\Downloads"
 
 DEFAULT_CONFIG = {
     "version": 1,
+    "settings": {
+        "source_directories": ["D:\\Downloads"]
+    },
     "groups": {
         "AI Draw": {
             "绘画模型": R"D:\AAAMyApp\AI\sd-webui-aki-v4.11.1-cu128\models\Stable-diffusion",
@@ -47,9 +49,14 @@ DEFAULT_CONFIG = {
 def load_config():
     if not os.path.exists(CONFIG_PATH):
         save_config(DEFAULT_CONFIG)
-        return dict(DEFAULT_CONFIG)
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        config = dict(DEFAULT_CONFIG)
+    else:
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            config = json.load(f)
+    # 确保 settings 字段兼容旧配置
+    if "settings" not in config:
+        config["settings"] = {"source_directories": ["D:\\Downloads"]}
+    return config
 
 
 def save_config(cfg):
@@ -646,6 +653,45 @@ def manage_config(cfg: dict):
             manage_extensions(cfg)
 
 
+# ========== 设置 ==========
+
+def manage_settings(cfg: dict):
+    while True:
+        print("\n" + "=" * 48)
+        print("  设置")
+        print("=" * 48)
+        print("  配置文件路径：")
+        print(f"    {CONFIG_PATH}")
+        print()
+        src_dirs = cfg.get("settings", {}).get("source_directories", ["D:\\Downloads"])
+        src_str = "、".join(src_dirs) if src_dirs else "（未设置）"
+        print("  来源目录：")
+        print(f"    {src_str}")
+        print()
+        print("  [1] 设置来源目录")
+        print("  [0] 返回主菜单")
+        choice = input_option("输入编号: ", {"1", "0"})
+        if choice == "0":
+            return
+        if choice == "1":
+            new_dir = input("请输入来源目录路径 (多个用逗号分隔，0 取消): ").strip()
+            if new_dir == "0" or not new_dir:
+                continue
+            dirs = [d.strip() for d in new_dir.split(",") if d.strip()]
+            valid_dirs = []
+            for d in dirs:
+                if os.path.isabs(d):
+                    valid_dirs.append(d)
+                else:
+                    print(f"警告：跳过无效路径「{d}」，请使用绝对路径。")
+            if valid_dirs:
+                cfg["settings"]["source_directories"] = valid_dirs
+                save_config(cfg)
+                print(f"✓ 来源目录已更新：{'、'.join(valid_dirs)}")
+            else:
+                print("未设置有效的目录。")
+
+
 # ========== 主菜单 ==========
 
 def main():
@@ -665,15 +711,20 @@ def main():
         print("  [1] 整理最新下载文件")
         print("  [2] 移动指定文件")
         print("  [3] 管理分类配置")
+        print("  [4] 设置")
         print("  [0] 退出")
-        choice = input_option("输入编号: ", {"1", "2", "3", "0"})
+        choice = input_option("输入编号: ", {"1", "2", "3", "4", "0"})
 
         if choice == "0":
             print("再见。")
             break
 
         if choice == "1":
-            file_path = get_latest_file(DOWNLOAD_DIR)
+            src_dirs = cfg.get("settings", {}).get("source_directories", ["D:\\Downloads"])
+            if not src_dirs:
+                print("错误：未设置来源目录，请先到设置中配置。")
+                continue
+            file_path = get_latest_file(src_dirs[0])
             if file_path is None:
                 continue
             organize_file(file_path, cfg)
@@ -690,6 +741,8 @@ def main():
         elif choice == "3":
             manage_config(cfg)
 
+        elif choice == "4":
+            manage_settings(cfg)
 
 if __name__ == "__main__":
     main()
