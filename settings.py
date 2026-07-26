@@ -1,6 +1,7 @@
 import os
 from config import CONFIG_PATH, save_config
-from i18n import t, set_language as i18n_set_language, _current_lang
+import i18n
+from i18n import t
 from utils import input_option, input_yes_no
 
 
@@ -44,8 +45,8 @@ def manage_settings(cfg: dict):
                 print(t("未设置有效的目录。"))
 
         elif choice == "2":
-            lang = "en" if _current_lang == "zh" else "zh"
-            i18n_set_language(lang)
+            lang = "en" if i18n._current_lang == "zh" else "zh"
+            i18n.set_language(lang)
             cfg["settings"]["language"] = lang
             save_config(cfg)
             print(t("语言已切换"))

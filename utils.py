@@ -66,6 +66,7 @@ def show_file_info(file_path: str):
     stat = os.stat(file_path)
     ctime = datetime.fromtimestamp(stat.st_ctime).strftime("%Y-%m-%d %H:%M:%S")
     print(f"{t('  文件名：')}{os.path.basename(file_path)}")
+    print(f"{t('  位置：')}{os.path.dirname(file_path)}")
     print(f"{t('  后缀名：')}{os.path.splitext(file_path)[1].lower()}")
     print(f"{t('  大小：')}{format_size(stat.st_size)}")
     print(f"{t('  加入时间：')}{ctime}")

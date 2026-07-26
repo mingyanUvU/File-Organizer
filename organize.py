@@ -19,6 +19,9 @@ def organize_file(file_path: str, cfg: dict):
     show_file_info(file_path)
     print("=" * 48)
 
+    if input_yes_no(f"{t('是否打开文件所在文件夹？')}(y/n): "):
+        open_folder(os.path.dirname(file_path))
+
     ext = os.path.splitext(file_path)[1].lower()
     ext_mappings = cfg["extensions"].get(ext, [])
 
