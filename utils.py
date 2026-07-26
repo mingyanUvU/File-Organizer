@@ -39,6 +39,11 @@ def open_folder(path: str):
         print(f"{t('路径不存在：')}{path}")
 
 
+EXCLUDED_FILES = {"desktop.ini", "thumbs.db", ".ds_store"}
+# 临时文件/未完成下载，跳过
+EXCLUDED_EXTS = {".tmp", ".temp", ".crdownload", ".download", ".part"}
+
+
 def get_latest_file(folder: str) -> str | None:
     if not os.path.isdir(folder):
         print(f"{t('错误：目录不存在 — ')}{folder}")
@@ -46,7 +51,7 @@ def get_latest_file(folder: str) -> str | None:
     entries = [
         os.path.join(folder, f)
         for f in os.listdir(folder)
-        if os.path.isfile(os.path.join(folder, f))
+        if os.path.isfile(os.path.join(folder, f)) and f.lower() not in EXCLUDED_FILES and not f.startswith("~$") and os.path.splitext(f)[1].lower() not in EXCLUDED_EXTS
     ]
     if not entries:
         print(t("目录为空，没有可处理的文件。"))
