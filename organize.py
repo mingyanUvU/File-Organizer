@@ -40,14 +40,15 @@ def organize_file(file_path: str, cfg: dict):
                 label = f"  [{idx}] " + t("使用默认分类") + f" \u2192 {g} \u2192 {c}"
             print(label)
             idx += 1
+        manual_idx = idx
+        print(f"  [{manual_idx}] " + t("选择其他分类"))
+        idx += 1
         pi = idx
         print(f"  [{pi}] " + t("直接输入路径"))
         idx += 1
-        print(f"  [{idx}] " + t("选择其他分类"))
-        idx += 1
         print("  [0] " + t("取消"))
 
-        valid = {"0", "1", str(pi), str(idx-1)}
+        valid = {"0", "1", str(pi), str(manual_idx)}
         if ext_mappings:
             valid |= {str(i) for i in range(2, 2 + len(ext_mappings))}
         choice = input_option(t("输入编号: "), valid)
