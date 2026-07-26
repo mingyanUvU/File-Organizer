@@ -478,5 +478,77 @@
   "输入编号: ": [
     "输入编号: ",
     "Enter number: "
+  ],
+  "、": [
+    "、",
+    ", "
+  ],
+  "下没有分类，请先新增。": [
+    "下没有分类，请先新增。",
+    " has no categories. Add one first."
+  ],
+  "从所有分类中选择": [
+    "从所有分类中选择",
+    "Select from all categories"
+  ],
+  "分组": [
+    "分组",
+    "Group "
+  ],
+  "删除此条映射？(y/n): ": [
+    "删除此条映射？(y/n): ",
+    "Delete this mapping? (y/n): "
+  ],
+  "已删除。": [
+    "已删除。",
+    "Deleted."
+  ],
+  "文件不存在。": [
+    "文件不存在。",
+    "File not found."
+  ],
+  "是否继续添加指向？(y/n): ": [
+    "是否继续添加指向？(y/n): ",
+    "Add another mapping? (y/n): "
+  ],
+  "该后缀已存在，将添加新的指向。": [
+    "该后缀已存在，将添加新的指向。",
+    "Extension exists. Adding new mapping."
+  ],
+  "请从所有分类中选择": [
+    "请从所有分类中选择",
+    "Select from all categories"
+  ],
+  "请重新选择分类": [
+    "请重新选择分类",
+    "Select again"
+  ],
+  "路径已更新。": [
+    "路径已更新。",
+    "Path updated."
+  ],
+  "输入无效": [
+    "输入无效",
+    "Invalid input"
+  ],
+  "输入编号 (0 取消): ": [
+    "输入编号 (0 取消): ",
+    "Enter number (0 cancel): "
+  ],
+  "输入编号 (0 返回): ": [
+    "输入编号 (0 返回): ",
+    "Enter number (0 back): "
+  ],
+  "输入编号 (0 返回分组列表): ": [
+    "输入编号 (0 返回分组列表): ",
+    "Enter number (0 back): "
+  ],
+  "选择新指向": [
+    "选择新指向",
+    "Select new mapping"
+  ],
+  "（未设置）": [
+    "（未设置）",
+    "(Not set)"
   ]
 }
