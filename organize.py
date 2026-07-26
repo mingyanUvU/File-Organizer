@@ -5,7 +5,7 @@ from config import save_config
 from i18n import t
 from utils import (
     sanitize_folder_name, input_yes_no, input_option,
-    open_folder, show_file_info, select_classification
+    open_folder, show_file_info, select_classification, get_latest_file
 )
 
 
