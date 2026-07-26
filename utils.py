@@ -48,11 +48,16 @@ def get_latest_file(folder: str) -> str | None:
     if not os.path.isdir(folder):
         print(f"{t('错误：目录不存在 — ')}{folder}")
         return None
-    entries = [
-        os.path.join(folder, f)
-        for f in os.listdir(folder)
-        if os.path.isfile(os.path.join(folder, f)) and f.lower() not in EXCLUDED_FILES and not f.startswith("~$") and os.path.splitext(f)[1].lower() not in EXCLUDED_EXTS
-    ]
+    entries = []
+    for f in os.listdir(folder):
+        full = os.path.join(folder, f)
+        if f.lower() in EXCLUDED_FILES:
+            continue
+        if f.startswith("~$"):
+            continue
+        if os.path.isfile(full) and os.path.splitext(f)[1].lower() in EXCLUDED_EXTS:
+            continue
+        entries.append(full)
     if not entries:
         print(t("目录为空，没有可处理的文件。"))
         return None
