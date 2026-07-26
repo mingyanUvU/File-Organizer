@@ -103,9 +103,14 @@ def organize_file(file_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    time_str = datetime.now().strftime("%H-%M")
-    target_dir = os.path.join(cat_path, date_str, time_str)
+    folder_input = input(f"{t('文件夹名（直接回车默认按日期归档）: ')}").strip()
+    if folder_input:
+        folder_name = sanitize_folder_name(folder_input)
+        target_dir = os.path.join(cat_path, folder_name)
+    else:
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        time_str = datetime.now().strftime("%H-%M")
+        target_dir = os.path.join(cat_path, date_str, time_str)
 
     try:
         os.makedirs(target_dir, exist_ok=True)
@@ -173,9 +178,14 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    time_str = datetime.now().strftime("%H-%M")
-    target_dir = os.path.join(cat_path, date_str, time_str)
+    folder_input = input(f"{t('文件夹名（直接回车默认按日期归档）: ')}").strip()
+    if folder_input:
+        folder_name = sanitize_folder_name(folder_input)
+        target_dir = os.path.join(cat_path, folder_name)
+    else:
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        time_str = datetime.now().strftime("%H-%M")
+        target_dir = os.path.join(cat_path, date_str, time_str)
 
     try:
         os.makedirs(target_dir, exist_ok=True)
