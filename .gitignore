@@ -8,4 +8,15 @@ build/
 dist/
 
 # 配置文件（运行时自动生成）
-分类配置.json
+分类配置.json# ��ִ���ļ�
+*.exe
+
+# Windows ϵͳ
+Thumbs.db
+Desktop.ini
+
+# �༭��
+.vscode/
+.idea/
+*.swp
+*.swo
