@@ -64,8 +64,7 @@ def organize_file(file_path: str, cfg: dict):
             if not os.path.isabs(p):
                 print(t("请输入绝对路径。"))
                 continue
-            sub = datetime.now().strftime("%Y-%m-%d_%H-%M")
-            target_dir = os.path.join(p, sub)
+            target_dir = p
             try:
                 os.makedirs(target_dir, exist_ok=True)
                 dst = os.path.join(target_dir, os.path.basename(file_path))
@@ -104,13 +103,9 @@ def organize_file(file_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    default_name = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    folder_input = input(f"{t('文件夹名（直接回车默认：')}{default_name}{t('）: ')}").strip()
-    folder_name = sanitize_folder_name(folder_input) if folder_input else default_name
-    if not folder_name:
-        folder_name = default_name
-
-    target_dir = os.path.join(cat_path, folder_name)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    time_str = datetime.now().strftime("%H-%M")
+    target_dir = os.path.join(cat_path, date_str, time_str)
 
     try:
         os.makedirs(target_dir, exist_ok=True)
@@ -178,11 +173,9 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    default_name = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    folder_input = input(f"{t('文件夹名（直接回车默认：')}{default_name}{t('）: ')}").strip()
-    folder_name = sanitize_folder_name(folder_input) if folder_input else default_name
-
-    target_dir = os.path.join(cat_path, folder_name)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    time_str = datetime.now().strftime("%H-%M")
+    target_dir = os.path.join(cat_path, date_str, time_str)
 
     try:
         os.makedirs(target_dir, exist_ok=True)
