@@ -724,9 +724,15 @@ def main():
             if not src_dirs:
                 print("错误：未设置来源目录，请先到设置中配置。")
                 continue
-            file_path = get_latest_file(src_dirs[0])
-            if file_path is None:
+            candidates = []
+            for d in src_dirs:
+                f = get_latest_file(d)
+                if f is not None:
+                    candidates.append(f)
+            if not candidates:
+                print("所有来源目录均为空。")
                 continue
+            file_path = max(candidates, key=os.path.getctime)
             organize_file(file_path, cfg)
 
         elif choice == "2":

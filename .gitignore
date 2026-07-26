@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.pyc
 
@@ -8,14 +8,16 @@ build/
 dist/
 
 # 配置文件（运行时自动生成）
-分类配置.json# ��ִ���ļ�
+分类配置.json
+
+# 可执行文件
 *.exe
 
-# Windows ϵͳ
+# Windows 系统
 Thumbs.db
 Desktop.ini
 
-# �༭��
+# 编辑器
 .vscode/
 .idea/
 *.swp
