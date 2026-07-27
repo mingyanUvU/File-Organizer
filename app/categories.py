@@ -2,7 +2,7 @@ import os
 from config import save_config
 from i18n import t
 from utils import (
-    sanitize_folder_name, input_yes_no, input_option, open_folder
+    sanitize_folder_name, input_yes_no, input_option, open_folder, quoted
 )
 
 

@@ -7,6 +7,15 @@ from config import save_config
 
 # ========== 通用 ==========
 
+def quoted(s: str) -> str:
+    return '"' + s + '"'
+
+
+def split_input(text: str) -> list[str]:
+    import re
+    return [s.strip() for s in re.split(r'[,，]', text) if s.strip()]
+
+
 def sanitize_folder_name(name: str) -> str:
     invalid = R'\ / : * ? " < > |'
     for ch in invalid:

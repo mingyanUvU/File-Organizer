@@ -28,22 +28,31 @@ def manage_settings(cfg: dict):
             return
 
         if choice == "1":
-            new_dir = input(t("请输入来源目录路径 (多个用逗号分隔，0 取消): ")).strip()
-            if new_dir == "0" or not new_dir:
+            src = cfg["settings"]["source_directories"]
+            if src:
+                print(t("当前来源目录："))
+                for i, d in enumerate(src, 1):
+                    print(f"  [{i}] {d}")
+            nd = input(t("请输入新来源目录（逗号分隔，0 取消）: ")).strip()
+            if nd == "0":
                 continue
-            dirs = [d.strip() for d in new_dir.split(",") if d.strip()]
-            valid_dirs = []
-            for d in dirs:
-                if os.path.isabs(d):
-                    valid_dirs.append(d)
-                else:
-                    print(f"{t('警告：跳过无效路径')}{d}")
-            if valid_dirs:
-                cfg["settings"]["source_directories"] = valid_dirs
-                save_config(cfg)
-                print(f"{t('来源目录已更新：')}{', '.join(valid_dirs)}")
-            else:
-                print(t("未设置有效的目录。"))
+            if nd:
+                from utils import split_input
+                nd_list = [d for d in split_input(nd) if os.path.isabs(d)]
+                for d in split_input(nd):
+                    if not os.path.isabs(d):
+                        print(f"{t('警告：跳过无效路径')} {d}")
+                if nd_list:
+                    cfg["settings"]["source_directories"].extend(nd_list)
+                    save_config(cfg)
+                    print(f"{t('已添加：')}{', '.join(nd_list)}")
+            if src:
+                di = input(t("输入编号删除（直接回车跳过）: ")).strip()
+                if di.isdigit() and 1 <= int(di) <= len(src):
+                    rm = src.pop(int(di) - 1)
+                    save_config(cfg)
+                    print(f"{t('已删除：')}{rm}")
+            print(t("来源目录已更新。"))
 
         elif choice == "2":
             lang = "en" if i18n._current_lang == "zh" else "zh"
