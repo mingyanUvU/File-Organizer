@@ -1,3 +1,4 @@
+import os
 from config import save_config
 from i18n import t, set_language
 from utils import input_yes_no
@@ -24,7 +25,14 @@ def first_run_setup(cfg: dict):
 
     print(f"  {t('语言已切换') if lang == 'en' else t('语言已切换')}")
     print()
-    print(f"  {t('当前没有任何配置，请先设置。')}")
+    _home = os.path.expanduser("~")
+    print(f"  {t('配置已包含')} Windows\u7cfb\u7edf\u9ed8\u8ba4 {t('分组')}:")
+    print(f"    {t('文档')} \u2192 {os.path.join(_home, 'Documents')}")
+    print(f"    {t('图片')} \u2192 {os.path.join(_home, 'Pictures')}")
+    print(f"    {t('视频')} \u2192 {os.path.join(_home, 'Videos')}")
+    print(f"    {t('音乐')} \u2192 {os.path.join(_home, 'Music')}")
+    print()
+    print(f"  {t('你可以直接使用，或到配置管理中修改。')}")
     print()
 
     while True:

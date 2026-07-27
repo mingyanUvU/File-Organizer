@@ -40,8 +40,7 @@ def main():
         kernel32.SetConsoleCP(65001)
 
     cfg = load_config()
-    if not cfg.get("groups") and not cfg.get("extensions"):
-        # 检查是否是首次运行（配置为空）
+    if not os.path.exists(CONFIG_PATH):
         first_run_setup(cfg)
     i18n_set_language(cfg.get("settings", {}).get("language", "zh"))
 

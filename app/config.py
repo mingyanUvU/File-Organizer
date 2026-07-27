@@ -14,8 +14,34 @@ CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 DEFAULT_CONFIG = {
     "version": 1,
     "settings": {"source_directories": [], "language": "zh"},
-    "groups": {},
-    "extensions": {}
+    "groups": {
+        "Windows\u7cfb\u7edf\u9ed8\u8ba4": {
+            "\u6587\u6863": os.path.join(os.path.expanduser("~"), "Documents"),
+            "\u56fe\u7247": os.path.join(os.path.expanduser("~"), "Pictures"),
+            "\u89c6\u9891": os.path.join(os.path.expanduser("~"), "Videos"),
+            "\u97f3\u4e50": os.path.join(os.path.expanduser("~"), "Music"),
+        }
+    },
+    "extensions": {
+        ".pdf": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".docx": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".txt": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".md": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".xlsx": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".csv": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u6587\u6863"]],
+        ".png": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".jpg": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".jpeg": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".gif": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".bmp": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".webp": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u56fe\u7247"]],
+        ".mp4": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u89c6\u9891"]],
+        ".avi": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u89c6\u9891"]],
+        ".mkv": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u89c6\u9891"]],
+        ".mp3": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u97f3\u4e50"]],
+        ".wav": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u97f3\u4e50"]],
+        ".flac": [["Windows\u7cfb\u7edf\u9ed8\u8ba4", "\u97f3\u4e50"]],
+    }
 }
 
 
