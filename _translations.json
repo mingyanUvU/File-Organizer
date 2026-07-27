@@ -626,5 +626,37 @@
   "文件夹名（直接回车默认按日期归档）: ": [
     "文件夹名（直接回车默认按日期归档）: ",
     "Folder name (Enter for date archive): "
+  ],
+  "当前没有任何配置，请先设置。": [
+    "当前没有任何配置，请先设置。",
+    "No configuration. Please set up first."
+  ],
+  "是否现在进入设置？": [
+    "是否现在进入设置？",
+    "Go to settings now?"
+  ],
+  "恢复出厂设置": [
+    "恢复出厂设置",
+    "Factory reset"
+  ],
+  "确定要恢复出厂设置？": [
+    "确定要恢复出厂设置？",
+    "Confirm factory reset?"
+  ],
+  "所有配置将被清除，此操作不可撤销。": [
+    "所有配置将被清除，此操作不可撤销。",
+    "All settings will be cleared. This cannot be undone."
+  ],
+  "再次确认？": [
+    "再次确认？",
+    "Confirm again?"
+  ],
+  "已重置为出厂状态。": [
+    "已重置为出厂状态。",
+    "Reset to factory state."
+  ],
+  "确认": [
+    "确认",
+    "Confirm"
   ]
 }

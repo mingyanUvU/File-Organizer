@@ -21,8 +21,9 @@ def manage_settings(cfg: dict):
         print()
         print(t("  [1] 设置来源目录"))
         print(t("  [2] 切换语言"))
+        print(t("  [3] 恢复出厂设置"))
         print(t("  [0] 返回主菜单"))
-        choice = input_option(t("输入编号: "), {"1", "2", "0"})
+        choice = input_option(t("输入编号: "), {"1", "2", "3", "0"})
         if choice == "0":
             return
 
@@ -50,3 +51,16 @@ def manage_settings(cfg: dict):
             cfg["settings"]["language"] = lang
             save_config(cfg)
             print(t("语言已切换"))
+
+        elif choice == "3":
+            print(f"\n{t('确定要恢复出厂设置？')}")
+            print(t("所有配置将被清除，此操作不可撤销。"))
+            if not input_yes_no(f"{t('确认')}(y/n): "):
+                continue
+            if not input_yes_no(f"{t('再次确认？')}(y/n): "):
+                continue
+            cfg["groups"] = {}
+            cfg["extensions"] = {}
+            cfg["settings"]["source_directories"] = []
+            save_config(cfg)
+            print(t("已重置为出厂状态。"))

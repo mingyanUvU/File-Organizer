@@ -2,6 +2,7 @@ import sys
 import os
 import ctypes
 from config import load_config, CONFIG_PATH
+from setup import first_run_setup
 from i18n import set_language as i18n_set_language, t
 from utils import input_option, get_latest_file
 from organize import organize_file
@@ -39,6 +40,9 @@ def main():
         kernel32.SetConsoleCP(65001)
 
     cfg = load_config()
+    if not cfg.get("groups") and not cfg.get("extensions"):
+        # 检查是否是首次运行（配置为空）
+        first_run_setup(cfg)
     i18n_set_language(cfg.get("settings", {}).get("language", "zh"))
 
     while True:
