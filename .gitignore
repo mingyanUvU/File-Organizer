@@ -8,7 +8,7 @@ build/
 dist/
 
 # 配置文件（运行时自动生成）
-分类配置.json
+config.json
 
 # 可执行文件
 *.exe
