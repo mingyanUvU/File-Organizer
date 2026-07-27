@@ -106,7 +106,7 @@ def organize_file(file_path: str, cfg: dict):
 
     # folder name prompt
     folder_input = input(f"  {t('文件夹名')} > ").strip()
-    if folder_input == chr(65311):  # 全角 ？
+    if folder_input in (chr(63), chr(65311)):  # ? or ？
         date_str = datetime.now().strftime("%Y-%m-%d")
         time_str = datetime.now().strftime("%H:%M")
         target_dir = os.path.join(cat_path, date_str, time_str)
