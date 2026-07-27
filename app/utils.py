@@ -87,7 +87,7 @@ def show_file_info(file_path: str):
 
 # ========== 分类选择（菜单组件，被 organize / extensions 共用） ==========
 
-def select_classification(cfg: dict, prompt: str = "请选择分类") -> tuple | None:
+def select_classification(cfg: dict, prompt: str = "请选择分类", require_path: bool = False) -> tuple | None:
     """返回 (group_name, category_name) 或 None"""
     groups = cfg["groups"]
 

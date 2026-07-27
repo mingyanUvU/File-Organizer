@@ -82,7 +82,7 @@ def organize_file(file_path: str, cfg: dict):
         if choice in {str(i) for i in range(2, 2 + len(ext_mappings))}:
             target = ext_mappings[int(choice) - 2]
             break
-        target = select_classification(cfg, t("请从所有分类中选择"))
+        target = select_classification(cfg, t("请从所有分类中选择"), require_path=True)
         if target is None:
             continue
         break
@@ -104,14 +104,17 @@ def organize_file(file_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    folder_input = input(f"{t('文件夹名（直接回车默认按日期归档）: ')}").strip()
-    if folder_input:
+    # folder name prompt
+    folder_input = input(f"  {t('文件夹名')} > ").strip()
+    if folder_input == chr(65311):  # 全角 ？
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        time_str = datetime.now().strftime("%H:%M")
+        target_dir = os.path.join(cat_path, date_str, time_str)
+    elif folder_input:
         folder_name = sanitize_folder_name(folder_input)
         target_dir = os.path.join(cat_path, folder_name)
     else:
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        time_str = datetime.now().strftime("%H-%M")
-        target_dir = os.path.join(cat_path, date_str, time_str)
+        target_dir = cat_path
 
     try:
         os.makedirs(target_dir, exist_ok=True)
@@ -119,7 +122,7 @@ def organize_file(file_path: str, cfg: dict):
         if os.path.exists(dst):
             os.remove(dst)
         shutil.move(file_path, target_dir)
-        print(f"\n{t('已移动到：')}{group_name} {t('→')} {cat_name} {t('→')} {folder_name}")
+        print(t("已移动到：") + target_dir)
     except Exception as e:
         print(f"{t('移动失败：')}{e}")
         return
@@ -158,7 +161,7 @@ def _handle_folder(folder_path: str, cfg: dict):
         return
 
     # 整体转移
-    target = select_classification(cfg, t("请从所有分类中选择"))
+    target = select_classification(cfg, t("请从所有分类中选择"), require_path=True)
     if target is None:
         return
 
@@ -179,14 +182,16 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    folder_input = input(f"{t('文件夹名（直接回车默认按日期归档）: ')}").strip()
-    if folder_input:
+    folder_input = input(f"  {t('文件夹名')} > ").strip()
+    if folder_input == chr(65311):
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        time_str = datetime.now().strftime("%H:%M")
+        target_dir = os.path.join(cat_path, date_str, time_str)
+    elif folder_input:
         folder_name = sanitize_folder_name(folder_input)
         target_dir = os.path.join(cat_path, folder_name)
     else:
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        time_str = datetime.now().strftime("%H-%M")
-        target_dir = os.path.join(cat_path, date_str, time_str)
+        target_dir = cat_path
 
     try:
         os.makedirs(target_dir, exist_ok=True)
@@ -195,7 +200,7 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("目标位置已存在同名项。"))
             return
         shutil.move(folder_path, target_dir)
-        print(f"\n{t('已移动到：')}{group_name} {t('→')} {cat_name} {t('→')} {folder_name}")
+        print(t("已移动到：") + target_dir)
     except Exception as e:
         print(f"{t('移动失败：')}{e}")
         return

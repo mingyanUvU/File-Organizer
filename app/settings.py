@@ -1,5 +1,5 @@
 import os
-from config import CONFIG_PATH, save_config
+from config import CONFIG_PATH, save_config, DEFAULT_CONFIG
 import i18n
 from i18n import t
 from utils import input_option, input_yes_no
@@ -62,5 +62,11 @@ def manage_settings(cfg: dict):
             cfg["groups"] = {}
             cfg["extensions"] = {}
             cfg["settings"]["source_directories"] = []
+            cfg["settings"]["language"] = "zh"
+            cfg.clear()
+            cfg.update(dict(DEFAULT_CONFIG))
             save_config(cfg)
             print(t("已重置为出厂状态。"))
+            from setup import first_run_setup
+            first_run_setup(cfg)
+            return
