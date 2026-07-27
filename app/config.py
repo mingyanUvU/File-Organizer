@@ -5,7 +5,7 @@ import json
 
 # ========== 路径 ==========
 
-BASE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, "分类配置.json")
 
 
