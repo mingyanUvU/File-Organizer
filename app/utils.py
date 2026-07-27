@@ -121,7 +121,7 @@ def select_classification(cfg: dict, prompt: str = "请选择分类", require_pa
             return None
         groups[name] = {}
         save_config(cfg)
-        print(f"{t('✓ 已创建分组：')}{name}")
+        print(f"{t('✓ 已创建分组：')}{quoted(name)}")
         group_name = name
     else:
         group_name = group_list[int(g_choice) - 1]
@@ -131,18 +131,23 @@ def select_classification(cfg: dict, prompt: str = "请选择分类", require_pa
     cat_list = list(cat_dict.keys())
 
     if not cat_list:
-        print(f'{t("分组")}{group_name}{t("下没有分类，请先新增。")}')
+        print(f'{t("分组")}{quoted(group_name)}{t("下没有分类，请先新增。")}')
         name = input(t("新分类名 (0 取消): ")).strip()
         if not name or name == "0":
             return None
         name = sanitize_folder_name(name)
-        path_input = input(t("目标路径（可选，留空后续设置）: ")).strip()
+        while True:
+            path_input = input(t("目标路径: ") if require_path else t("目标路径（可选，留空后续设置）: ")).strip()
+            if require_path and not path_input:
+                print(t("请输入路径。"))
+                continue
+            break
         cat_dict[name] = path_input
         save_config(cfg)
-        print(f"{t('✓ 已创建分类：')}{group_name} → {name}")
+        print(f"{t('✓ 已创建分类：')}{quoted(group_name)} → {quoted(name)}")
         return group_name, name
 
-    print(f"{group_name}{t(' 下的分类：')}")
+    print(f"{quoted(group_name)}{t(' 下的分类：')}")
     for i, c in enumerate(cat_list, 1):
         path_hint = cat_dict[c] if cat_dict[c] else t("（未设置）")
         print(f"  [{i}] {c}  {t('→')}  {path_hint}")
@@ -159,10 +164,15 @@ def select_classification(cfg: dict, prompt: str = "请选择分类", require_pa
         if name in cat_dict:
             print(t("该分类已存在。"))
             return None
-        path_input = input(t("目标路径（可选，留空后续设置）: ")).strip()
+        while True:
+            path_input = input(t("目标路径: ") if require_path else t("目标路径（可选，留空后续设置）: ")).strip()
+            if require_path and not path_input:
+                print(t("请输入路径。"))
+                continue
+            break
         cat_dict[name] = path_input
         save_config(cfg)
-        print(f"{t('✓ 已创建分类：')}{group_name} → {name}")
+        print(f"{t('✓ 已创建分类：')}{quoted(group_name)} → {quoted(name)}")
         return group_name, name
 
     cat_name = cat_list[int(c_choice) - 1]

@@ -45,7 +45,7 @@ def manage_extensions(cfg: dict):
                 g, c = result
                 ext_dict[ext].append([g, c])
                 save_config(cfg)
-                print(f"{t('✓ 已添加：')}{ext} {t('→')} {g} {t('→')} {c}")
+                print(f"{t('✓ 已添加：')}{ext} {t('→')} {quoted(g)} {t('→')} {quoted(c)}")
                 if not input_yes_no(t("是否继续添加指向？(y/n): ")):
                     break
             continue
@@ -59,7 +59,7 @@ def manage_extensions(cfg: dict):
             for i, (g, c) in enumerate(mappings, 1):
                 cat_path = cfg["groups"].get(g, {}).get(c, "")
                 hint = f"  ({cat_path})" if cat_path else ""
-                print(f"    [{i}] {g} {t('→')} {c} {hint}")
+                print(f"    [{i}] {quoted(g)} {t('→')} {quoted(c)} {hint}")
             print(t("  [a] 新增映射"))
             print(t("  [b] 删除整个后缀"))
 
@@ -75,7 +75,7 @@ def manage_extensions(cfg: dict):
                 g, c = result
                 mappings.append([g, c])
                 save_config(cfg)
-                print(f"{t('✓ 已添加：')}{ext} {t('→')} {g} {t('→')} {c}")
+                print(f"{t('✓ 已添加：')}{ext} {t('→')} {quoted(g)} {t('→')} {quoted(c)}")
                 continue
 
             if m_choice == "b":
@@ -92,7 +92,7 @@ def manage_extensions(cfg: dict):
 
             while True:
                 path_display = cat_path if cat_path else t("（未设置）")
-                print(f"\n{g} {t('→')} {c}")
+                print(f"\n{quoted(g)} {t('→')} {quoted(c)}")
                 print(f"{t('  路径：')}{path_display}\n")
                 print(t("  [1] 修改指向"))
                 print(t("  [2] 打开目标文件夹"))
@@ -108,7 +108,7 @@ def manage_extensions(cfg: dict):
                     ng, nc = result
                     mappings[int(m_choice) - 1] = [ng, nc]
                     save_config(cfg)
-                    print(f"{t('✓ 已修改：')}{ext} {t('→')} {ng} {t('→')} {nc}")
+                    print(f"{t('✓ 已修改：')}{ext} {t('→')} {ng} {t('→')} {quoted(nc)}")
                     g, c = ng, nc
                     cat_path = cfg["groups"].get(g, {}).get(c, "")
 

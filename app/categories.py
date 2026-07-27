@@ -21,7 +21,7 @@ def manage_categories(cfg: dict):
             name = sanitize_folder_name(name)
             groups[name] = {}
             save_config(cfg)
-            print(f"{t('✓ 已创建分组：')}{name}")
+            print(f"{t('✓ 已创建分组：')}{quoted(name)}")
             continue
 
         print(t("\n--- 管理分类 ---"))
@@ -44,7 +44,7 @@ def manage_categories(cfg: dict):
                 continue
             groups[name] = {}
             save_config(cfg)
-            print(f"{t('✓ 已创建分组：')}{name}")
+            print(f"{t('✓ 已创建分组：')}{quoted(name)}")
             continue
 
         group_name = group_list[int(g_choice) - 1]
@@ -53,7 +53,7 @@ def manage_categories(cfg: dict):
 
         while True:
             if not cat_list:
-                print(f"{group_name}{t('下没有分类。')}")
+                print(f"{quoted(group_name)}{t('下没有分类。')}")
                 name = input(t("新分类名 (0 返回分组列表): ")).strip()
                 if not name or name == "0":
                     break
@@ -61,11 +61,11 @@ def manage_categories(cfg: dict):
                 path_input = input(t("目标路径（可选）: ")).strip()
                 cat_dict[name] = path_input
                 save_config(cfg)
-                print(f"{t('✓ 已创建分类：')}{name}")
+                print(f"{t('✓ 已创建分类：')}{quoted(name)}")
                 cat_list = list(cat_dict.keys())
                 continue
 
-            print(f"\n{group_name}{t(' 下的分类：')}")
+            print(f"\n{quoted(group_name)}{t(' 下的分类：')}")
             for i, c in enumerate(cat_list, 1):
                 path_hint = cat_dict[c] if cat_dict[c] else t("（未设置）")
                 print(f"  [{i}] {c}  {t('→')}  {path_hint}")
@@ -85,7 +85,7 @@ def manage_categories(cfg: dict):
                 path_input = input(t("目标路径（可选）: ")).strip()
                 cat_dict[name] = path_input
                 save_config(cfg)
-                print(f"{t('✓ 已创建分类：')}{name}")
+                print(f"{t('✓ 已创建分类：')}{quoted(name)}")
                 cat_list = list(cat_dict.keys())
                 continue
 
@@ -95,7 +95,7 @@ def manage_categories(cfg: dict):
             # 操作菜单
             while True:
                 path_display = current_path if current_path else t("（未设置）")
-                print(f"\n{cat_name} ({group_name})")
+                print(f"\n{quoted(cat_name)} ({group_name})")
                 print(f"{t('  路径：')}{path_display}\n")
                 print(t("  [1] 修改路径"))
                 print(t("  [2] 重命名"))
@@ -135,7 +135,7 @@ def manage_categories(cfg: dict):
                             if g == group_name and c == cat_name:
                                 mappings[i][1] = new_name
                     save_config(cfg)
-                    print(f"{t('已重命名为：')}{new_name}")
+                    print(f"{t('已重命名为：')}{quoted(new_name)}")
                     cat_name = new_name
                     cat_list = list(cat_dict.keys())
 
@@ -158,7 +158,7 @@ def manage_categories(cfg: dict):
                             if g == group_name and c == cat_name:
                                 mappings[i][0] = target_group
                     save_config(cfg)
-                    print(f"{t('已移动到分组：')}{target_group}")
+                    print(f"{t('已移动到分组：')}{quoted(target_group)}")
                     cat_list = list(cat_dict.keys())
                     break
 
