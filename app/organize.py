@@ -105,10 +105,10 @@ def organize_file(file_path: str, cfg: dict):
             return
 
     # folder name prompt
-    folder_input = input(f"  {t('文件夹名')} > ").strip()
+    folder_input = input(f"  {t('建立文件夹？')} {t('？默认归档，回车直接移入。')}\n  > ").strip()
     if folder_input in (chr(63), chr(65311)):  # ? or ？
         date_str = datetime.now().strftime("%Y-%m-%d")
-        time_str = datetime.now().strftime("%H:%M")
+        time_str = datetime.now().strftime("%H-%M")
         target_dir = os.path.join(cat_path, date_str, time_str)
     elif folder_input:
         folder_name = sanitize_folder_name(folder_input)
@@ -182,10 +182,10 @@ def _handle_folder(folder_path: str, cfg: dict):
             print(t("取消操作。"))
             return
 
-    folder_input = input(f"  {t('文件夹名')} > ").strip()
-    if folder_input == chr(65311):
+    folder_input = input(f"  {t('建立文件夹？')} {t('？默认归档，回车直接移入。')}\n  > ").strip()
+    if folder_input in (chr(63), chr(65311)):
         date_str = datetime.now().strftime("%Y-%m-%d")
-        time_str = datetime.now().strftime("%H:%M")
+        time_str = datetime.now().strftime("%H-%M")
         target_dir = os.path.join(cat_path, date_str, time_str)
     elif folder_input:
         folder_name = sanitize_folder_name(folder_input)

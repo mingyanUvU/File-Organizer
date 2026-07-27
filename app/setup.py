@@ -32,11 +32,11 @@ def first_run_setup(cfg: dict):
     print(f"    {t('视频')} \u2192 {os.path.join(_home, 'Videos')}")
     print(f"    {t('音乐')} \u2192 {os.path.join(_home, 'Music')}")
     print()
-    print(f"  {t('你可以直接使用，或到配置管理中修改。')}")
+    print(f"  {t('你可以直接整理文件，或到管理分类配置新增分组。')}")
     print()
 
     while True:
-        inp = input(f"  {t('是否现在进入设置？')}(y/n): ").strip().lower()
+        inp = input(f"  {t('是否现在设置来源目录？')}(y/n): ").strip().lower()
         if inp in ("y", "yes", "\u662f"):  # 是
             from settings import manage_settings
             manage_settings(cfg)

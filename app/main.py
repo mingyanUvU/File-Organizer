@@ -39,8 +39,9 @@ def main():
         kernel32.SetConsoleOutputCP(65001)
         kernel32.SetConsoleCP(65001)
 
+    first_run = not os.path.exists(CONFIG_PATH)
     cfg = load_config()
-    if not os.path.exists(CONFIG_PATH):
+    if first_run:
         first_run_setup(cfg)
     i18n_set_language(cfg.get("settings", {}).get("language", "zh"))
 
