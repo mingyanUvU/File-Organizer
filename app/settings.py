@@ -1,8 +1,78 @@
 import os
+import json
 from config import CONFIG_PATH, save_config, DEFAULT_CONFIG
 import i18n
 from i18n import t
-from utils import input_option, input_yes_no
+from utils import input_option, input_yes_no, open_folder, split_input
+
+
+# ========== 来源目录管理 ==========
+
+def manage_source_dirs(cfg: dict):
+    """三级菜单：列出来源目录 -> 选中 -> 打开/删除；[a] 新增"""
+    while True:
+        src = cfg["settings"]["source_directories"]
+        print("\n" + "=" * 48)
+        print(t("  设置来源目录"))
+        print("=" * 48)
+
+        if src:
+            print(t("现有来源目录："))
+            for i, d in enumerate(src, 1):
+                print(f"  [{i}] {d}")
+        else:
+            print(t("（未设置）"))
+
+        print(t("  [a] 新增来源目录"))
+        print(t("  [0] 返回"))
+
+        valid = {"a", "0"} | {str(i) for i in range(1, len(src) + 1)}
+        choice = input_option(t("输入编号: "), valid)
+
+        if choice == "0":
+            return
+
+        # --- 新增 ---
+        if choice == "a":
+            nd = input(t("请输入来源目录路径（多个用逗号分隔，0 取消）: ")).strip()
+            if nd == "0" or not nd:
+                continue
+            added = []
+            for d in split_input(nd):
+                if not os.path.isabs(d):
+                    print(f"{t('警告：跳过无效路径「')}{d}」")
+                    continue
+                if d in src:
+                    print(f"{t('已存在，跳过：')}{d}")
+                    continue
+                src.append(d)
+                added.append(d)
+            if added:
+                save_config(cfg)
+                print(f"{t('✓ 来源目录已更新：')}{', '.join(added)}")
+            continue
+
+        # --- 选中一个目录 ---
+        idx = int(choice) - 1
+        dir_path = src[idx]
+
+        while True:
+            print(f"\n{dir_path}")
+            print(t("  [1] 打开目录"))
+            print(t("  [2] 删除此目录"))
+            print(t("  [0] 取消，返回"))
+            act = input_option(t("输入编号: "), {"1", "2", "0"})
+
+            if act == "0":
+                break
+            if act == "1":
+                open_folder(dir_path)
+            elif act == "2":
+                if input_yes_no(f"{t('确认删除来源目录？')}(y/n): "):
+                    src.pop(idx)
+                    save_config(cfg)
+                    print(f"{t('✓ 已删除来源目录：')}{dir_path}")
+                    break
 
 
 # ========== 设置 ==========
@@ -28,31 +98,7 @@ def manage_settings(cfg: dict):
             return
 
         if choice == "1":
-            src = cfg["settings"]["source_directories"]
-            if src:
-                print(t("当前来源目录："))
-                for i, d in enumerate(src, 1):
-                    print(f"  [{i}] {d}")
-            nd = input(t("请输入新来源目录（逗号分隔，0 取消）: ")).strip()
-            if nd == "0":
-                continue
-            if nd:
-                from utils import split_input
-                nd_list = [d for d in split_input(nd) if os.path.isabs(d)]
-                for d in split_input(nd):
-                    if not os.path.isabs(d):
-                        print(f"{t('警告：跳过无效路径')} {d}")
-                if nd_list:
-                    cfg["settings"]["source_directories"].extend(nd_list)
-                    save_config(cfg)
-                    print(f"{t('已添加：')}{', '.join(nd_list)}")
-            if src:
-                di = input(t("输入编号删除（直接回车跳过）: ")).strip()
-                if di.isdigit() and 1 <= int(di) <= len(src):
-                    rm = src.pop(int(di) - 1)
-                    save_config(cfg)
-                    print(f"{t('已删除：')}{rm}")
-            print(t("来源目录已更新。"))
+            manage_source_dirs(cfg)
 
         elif choice == "2":
             lang = "en" if i18n._current_lang == "zh" else "zh"
@@ -68,14 +114,11 @@ def manage_settings(cfg: dict):
                 continue
             if not input_yes_no(f"{t('再次确认？')}(y/n): "):
                 continue
-            cfg["groups"] = {}
-            cfg["extensions"] = {}
-            cfg["settings"]["source_directories"] = []
-            cfg["settings"]["language"] = "zh"
             cfg.clear()
-            cfg.update(dict(DEFAULT_CONFIG))
+            # 深拷贝，避免 DEFAULT_CONFIG 被后续运行时的修改污染
+            cfg.update(json.loads(json.dumps(DEFAULT_CONFIG)))
             save_config(cfg)
+            # 出厂状态语言固定为中文，并立即切换当前界面
+            i18n.set_language("zh")
             print(t("已重置为出厂状态。"))
-            from setup import first_run_setup
-            first_run_setup(cfg)
             return

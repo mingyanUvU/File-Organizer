@@ -5,7 +5,14 @@ import json
 
 # ========== 路径 ==========
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+def _get_base_dir():
+    """exe 模式把配置放在 exe 同目录，可随 exe 一起复制迁移"""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+BASE_DIR = _get_base_dir()
 CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 
 
@@ -50,7 +57,8 @@ DEFAULT_CONFIG = {
 def load_config():
     if not os.path.exists(CONFIG_PATH):
         save_config(DEFAULT_CONFIG)
-        config = dict(DEFAULT_CONFIG)
+        # 深拷贝，避免运行中修改 config 时污染模块级 DEFAULT_CONFIG
+        config = json.loads(json.dumps(DEFAULT_CONFIG))
     else:
         with open(CONFIG_PATH, "r", encoding="utf-8") as f:
             config = json.load(f)

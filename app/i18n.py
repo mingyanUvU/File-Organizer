@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 
 # ========== 国际化 ==========
@@ -10,9 +11,25 @@ _T = {}
 
 def _load_T():
     global _T
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_translations.json")
+    path = _resource_path("_translations.json")
     with open(path, encoding="utf-8") as f:
         _T = json.load(f)
+
+
+def _resource_path(name):
+    """打包后从 PyInstaller 解压目录读取数据文件，开发模式读取源码目录"""
+    if getattr(sys, "frozen", False):
+        base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+        candidates = [
+            os.path.join(base, name),
+            os.path.join(base, "app", name),
+            os.path.join(os.path.dirname(sys.executable), name),
+        ]
+        for p in candidates:
+            if os.path.exists(p):
+                return p
+        return candidates[0]
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
 
 
 _load_T()
