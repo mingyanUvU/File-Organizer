@@ -1,9 +1,31 @@
 import os
 import json
+import sys
 from config import CONFIG_PATH, save_config, DEFAULT_CONFIG
 import i18n
 from i18n import t
 from utils import input_option, input_yes_no, open_folder, split_input
+
+
+def restart_app():
+    """重启当前程序：兼容 PyInstaller exe 与源码运行"""
+    if getattr(sys, "frozen", False):
+        args = [sys.executable] + sys.argv[1:]
+    else:
+        entry = os.environ.get("FILE_ORGANIZER_ENTRY")
+        if not entry:
+            entry = os.path.abspath(sys.argv[0])
+        args = [sys.executable, entry]
+    try:
+        os.execv(args[0], args)
+    except OSError:
+        import subprocess
+        try:
+            subprocess.Popen(args)
+            sys.exit(0)
+        except OSError as e:
+            print(f"{t('重启失败：')}{e}")
+            sys.exit(1)
 
 
 # ========== 来源目录管理 ==========
@@ -114,11 +136,14 @@ def manage_settings(cfg: dict):
                 continue
             if not input_yes_no(f"{t('再次确认？')}(y/n): "):
                 continue
+            # 直接删除配置文件，下次启动会走首次运行初始化
+            try:
+                if os.path.exists(CONFIG_PATH):
+                    os.remove(CONFIG_PATH)
+            except OSError as e:
+                print(f"{t('删除配置文件失败：')}{e}")
+                continue
             cfg.clear()
-            # 深拷贝，避免 DEFAULT_CONFIG 被后续运行时的修改污染
-            cfg.update(json.loads(json.dumps(DEFAULT_CONFIG)))
-            save_config(cfg)
-            # 出厂状态语言固定为中文，并立即切换当前界面
             i18n.set_language("zh")
-            print(t("已重置为出厂状态。"))
-            return
+            print(t("已重置为出厂状态，正在重启…"), flush=True)
+            restart_app()

@@ -703,6 +703,18 @@
     "已重置为出厂状态。",
     "Reset to factory state."
   ],
+  "已重置为出厂状态，程序将退出，下次启动重新初始化。": [
+    "已重置为出厂状态，程序将退出，下次启动重新初始化。",
+    "Reset to factory state. Exiting. Re-initialize on next start."
+  ],
+  "删除配置文件失败：": [
+    "删除配置文件失败：",
+    "Failed to delete config file: "
+  ],
+  "重启失败：": [
+    "重启失败：",
+    "Failed to restart: "
+  ],
   "确认": [
     "确认",
     "Confirm"
