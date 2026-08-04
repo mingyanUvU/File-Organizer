@@ -8,24 +8,24 @@ from utils import input_option, input_yes_no, open_folder, split_input
 
 
 def restart_app():
-    """重启当前程序：兼容 PyInstaller exe 与源码运行"""
+    """重启程序：启动新实例后退出当前进程（参数列表方式，不经过 shell）"""
     if getattr(sys, "frozen", False):
         args = [sys.executable] + sys.argv[1:]
     else:
         entry = os.environ.get("FILE_ORGANIZER_ENTRY")
         if not entry:
             entry = os.path.abspath(sys.argv[0])
-        args = [sys.executable, entry]
-    try:
-        os.execv(args[0], args)
-    except OSError:
-        import subprocess
-        try:
-            subprocess.Popen(args)
-            sys.exit(0)
-        except OSError as e:
-            print(f"{t('重启失败：')}{e}")
+        if not os.path.isfile(entry):
+            print(f"{t('重启失败：找不到入口脚本')} {entry}")
             sys.exit(1)
+        args = [sys.executable, entry]
+    import subprocess
+    try:
+        subprocess.Popen(args, close_fds=True)
+        sys.exit(0)
+    except OSError as e:
+        print(f"{t('重启失败：')}{e}")
+        sys.exit(1)
 
 
 # ========== 来源目录管理 ==========

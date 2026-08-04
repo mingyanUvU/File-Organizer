@@ -715,6 +715,10 @@
     "重启失败：",
     "Failed to restart: "
   ],
+  "重启失败：找不到入口脚本": [
+    "重启失败：找不到入口脚本",
+    "Failed to restart: entry script not found"
+  ],
   "确认": [
     "确认",
     "Confirm"
